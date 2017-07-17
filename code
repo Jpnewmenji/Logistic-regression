@@ -1,0 +1,72 @@
+# Logistic-regression
+
+def  Logistic():
+    eeta=0.01 
+    W=np.empty([1, len(top500)+1], dtype=int)*0
+    Ycap=np.empty([len(Train),1], dtype=int)*0+0.0
+    empty=np.empty([len(Train),1],dtype=int)*0+1
+    newmatrix=np.append(empty,matrix,1)
+    lamb_da=0.01
+    M=np.transpose(newmatrix)
+    Y=np.empty([len(Train),1], dtype=int)*0+0.0
+    for i in range (0,len(Train_array)):
+       Y[i]=int(Train_array[i,1])
+    
+    for i in range(0,100):
+        
+        
+        D=np.matmul(W,M)
+        D=-1*D
+             
+        for i in range(0,len(Train)):
+               Ycap[i]=(1/(1+math.exp(D[0,i])))    
+        Ydiff=Y-Ycap    
+        sumss=np.empty([1,len(top500)+1], dtype=int)*0
+            
+        for i in range(0,len(Train)):       
+             sumss=Ydiff[i]*newmatrix[i,:]+sumss
+           
+        #for i in range(0,len(Train)):       
+         #    sumss=Ydiff[i]*M[:,i]+sumss
+        slope=sumss- lamb_da*W
+        
+        Wnew=W+eeta*slope
+        
+        if np.linalg.norm(np.array(Wnew)-np.array(W)) == 1*math.exp(-6):
+                print("If:", np.linalg.norm(np.array(Wnew)-np.array(W)) == 1*math.exp(-6))
+                break
+        else:
+                W = Wnew
+    
+    
+    empty=np.empty([len(Test),1],dtype=int)*0+1
+    testnewmatrix=np.append(empty,test_matrix,1)
+    Testmatrixtrans=np.transpose(testnewmatrix)
+    Y=np.empty([len(Train),1], dtype=int)*0+0.0
+    F=np.matmul(W,Testmatrixtrans)
+    predict=np.empty([len(Test),1], dtype=int)*0+0.0
+    F=-1*F
+    for i in range(0,len(Test)):
+         predict[i]=(1/(1+math.exp(F[0,i]))) 
+    
+    for i in range(0,len(Test)):
+         if predict[i]<0.5:
+             predict[i]=0
+         else :
+             predict[i]=1
+                    
+    #zero loss
+    
+    Mistakes=0   
+    Actual=np.empty([len(Test),1], dtype=int)*0+0.0
+    for i in range (0,len(Test_array)):
+       Actual[i]=int(Test_array[i,1])
+    
+    for i in range (0,len(Test_array)):
+        if Actual[i]!=predict[i]:
+            Mistakes=Mistakes+1
+    
+    #Zero_loss[0,U]= Mistakes/len(Test)            
+    Zero_loss_LR= Mistakes/len(Test)                  
+    print ("ZERO_ONE_LOSS LR %s"%Zero_loss_LR)
+    return(Zero_loss_LR)                
